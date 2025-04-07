@@ -1,0 +1,87 @@
+.loginContainer {
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fafafa;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .loginTitle {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .loginForm {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #444;
+  }
+  
+  .input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  .loginButton {
+    padding: 12px;
+    background-color: #4a90e2;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .loginButton:disabled {
+    background-color: #b0c4de;
+    cursor: not-allowed;
+  }
+  
+  .errorMessage {
+    color: red;
+    font-size: 14px;
+    margin: -5px 0 10px;
+  }
+  
+  .signupLink {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .signupButton {
+    background: none;
+    border: none;
+    color: #4a90e2;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .toggleButton {
+    background-color: transparent;
+    color: #007bff;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }

@@ -1,0 +1,22 @@
+@import "./base/reset.css";
+
+/* 기본 폰트 */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
+
+/* 링크 초기화 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 버튼 초기화 */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}

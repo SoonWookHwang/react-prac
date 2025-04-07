@@ -1,0 +1,43 @@
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #f7f9fc;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .headerLeft {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    list-style: none;
+  }
+  
+  .headerRight {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+  }
+  
+  .headerRight li button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .headerRight li div {
+    padding: 8px;
+    font-weight: bold;
+    color: #4a90e2;
+  }
+
+  .username {
+    color : black;
+    font-weight: 650;
+    font-size: 1.2rem;
+  }

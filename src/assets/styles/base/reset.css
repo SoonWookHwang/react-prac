@@ -1,0 +1,78 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* HTML5 요소 디스플레이 초기화 */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/* 기본 텍스트 스타일 */
+body {
+  line-height: 1.5;
+  font-size: 16px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 리스트 스타일 제거 */
+ul,
+ol {
+  list-style: none;
+}
+
+/* 링크 초기화 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 이미지 및 비디오 */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 폼 요소 기본 스타일 초기화 */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  background: none;
+}
+
+/* 버튼 기본 커서 */
+button {
+  cursor: pointer;
+  background-color: transparent;
+}
+
+/* 테이블 초기화 */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
