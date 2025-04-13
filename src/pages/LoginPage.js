@@ -5,8 +5,8 @@ import styles from "../assets/styles/components/LoginPage.module.css";
 
 const LoginPage = ({ setIsLogin, setLoginUser }) => {
   const navigate = useNavigate();
-  const [loginMode, setLoginMode] = useState("id");
-  const [userInfo, setUserInfo] = useState({ loginId: "", password: "" });
+  const [loginMode, setLoginMode] = useState("username");
+  const [userInfo, setUserInfo] = useState({ username: "", password: "", type: "username" });
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [loginError, setLoginError] = useState("");
 
@@ -17,8 +17,38 @@ const LoginPage = ({ setIsLogin, setLoginUser }) => {
 
   const toggleLoginMode = () => {
     setLoginMode((prev) => (prev === "id" ? "email" : "id"));
-    setUserInfo((prev) => ({ ...prev, loginId: "" }));
+    setUserInfo((prev) => ({ ...prev, username: "" }));
     setLoginError("");
+  };
+
+  const login = async () => {
+    const loginUrl = `http://localhost:9000/api/auth/login`;
+    // ?username=${userInfo.username}&password=${userInfo.password}&type=${userInfo.type}
+    try {
+      const res = await fetch(loginUrl, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify(userInfo)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // 서버에서 에러 메시지가 올 경우 출력
+        setLoginError(data.message || "로그인에 실패했습니다.");
+        return;
+      }
+      console.log(data)
+      alert(data.message);
+      setIsLogin(true);
+      setLoginUser(data.nickname);
+      navigate("/success")
+    } catch (error) {
+      console.error("로그인 요청 중 오류:", error);
+      setLoginError("서버와의 연결에 실패했습니다.");
+    }
   };
 
   const handleLoginSubmit = async (e) => {
@@ -28,35 +58,7 @@ const LoginPage = ({ setIsLogin, setLoginUser }) => {
 
     setTimeout(() => {
       try {
-        // 회원 db(로컬스토리지)에서 로그인 유효성 검증
-        const users = JSON.parse(localStorage.getItem("users") || "[]");
-        const matchedUser = users.find((user) => {
-          if (
-            user.password === userInfo.password &&
-            (loginMode === "id"
-              ? user.loginId === userInfo.loginId
-              : user.email === userInfo.loginId)
-          ) {
-            // 유효할 때 로그인된 유저를 리턴
-            return user;
-          } else {
-            // 유효하지 않을때 null 반환
-            return null;
-          }
-        });
-        // 유효하다면
-        if (matchedUser) {
-          // 로그인 상태와 로그인 유저 정보를 쿠키에 저장
-          Cookies.set("loginSuccess", "true", { path: "/" });
-          console.log("matchedUser", matchedUser);
-          Cookies.set("loginUser", matchedUser.loginId, { path: "/" });
-          setIsLogin(true);
-          // 이렇게 안하면 바로 반영이 안됌
-          setLoginUser(matchedUser.loginId);
-          navigate("/success");
-        } else {
-          setLoginError("아이디/이메일 또는 비밀번호가 틀렸습니다.");
-        }
+        login();
       } catch (error) {
         setLoginError("로그인 중 오류가 발생했습니다.");
       } finally {
@@ -73,19 +75,19 @@ const LoginPage = ({ setIsLogin, setLoginUser }) => {
         onClick={toggleLoginMode}
         className={styles.toggleButton}
       >
-        {loginMode === "id" ? "이메일로 로그인" : "아이디로 로그인"}
+        {loginMode === "username" ? "이메일로 로그인" : "아이디로 로그인"}
       </button>
 
       <form onSubmit={handleLoginSubmit} className={styles.loginForm}>
         <div className={styles.formGroup}>
-          <label htmlFor="loginId" className={styles.label}>
-            {loginMode === "id" ? "아이디" : "이메일"}
+          <label htmlFor="username" className={styles.label}>
+            {loginMode === "username" ? "아이디" : "이메일"}
           </label>
           <input
-            type={loginMode === "id" ? "text" : "email"}
-            id="loginId"
-            name="loginId"
-            value={userInfo.loginId}
+            type={loginMode === "username" ? "text" : "email"}
+            id="username"
+            name="username"
+            value={userInfo.username}
             onChange={handleChange}
             placeholder={
               loginMode === "id" ? "아이디를 입력하세요" : "이메일을 입력하세요"

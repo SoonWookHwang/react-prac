@@ -5,61 +5,82 @@ import styles from "../assets/styles/pages/Signup.module.css";
 const SignupPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    loginId: "",
+    username: "",
     password: "",
     confirmPassword: "",
     email: "",
+    nickname: ""
   });
-  const [usernameError, setUsernameError] = useState("");
-  const [emailError, setEmailError] = useState("");
+
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    server: ""
+  });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setUsernameError("");
+  const validateForm = () => {
+    const newErrors = {
+      username: "",
+      email: "",
+      server: ""
+    };
 
     if (formData.password !== formData.confirmPassword) {
-      setUsernameError("비밀번호가 일치하지 않습니다.");
-      return;
+      newErrors.username = "비밀번호가 일치하지 않습니다.";
     }
 
-    // 기존 회원 목록 가져오기 (없으면 빈 배열)
-    const existingUsers = JSON.parse(localStorage.getItem("users") || "[]");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      newErrors.email = "이메일 형식에 맞지 않습니다.";
+    }
 
-    // 새 회원 정보
+    // setErrors((prev)=>newErrors);
+    setErrors((prev) => ({ ...prev, newErrors }));
+
+    // 에러 메시지 중 하나라도 있으면 false
+    return !Object.values(newErrors).some((msg) => msg);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
     const newUser = {
-      loginId: formData.loginId,
+      username: formData.username,
       password: formData.password,
+      passwordCheck: formData.confirmPassword,
       email: formData.email,
+      nickname: formData.nickname
     };
 
-    // 동일한 아이디 존재 여부 체크
-    const isDuplicate = existingUsers.some(
-      (user) => user.loginId === newUser.loginId
-    );
-    const emailValidation = () => {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return emailRegex.test(newUser.email);
-    };
+    try {
+      // const res = await fetch("http://localhost:9000/register", {
+      const res = await fetch("http://localhost:9000/api/members/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(newUser)
+      });
 
-    !emailValidation()
-      ? setEmailError("이메일 형식에 맞지 않습니다")
-      : setEmailError("");
+      const data = await res.json();
 
-    if (isDuplicate) {
-      setUsernameError("이미 존재하는 아이디입니다.");
-      return;
+      if (!res.ok) {
+        alert("회원가입 실패");
+        throw new Error(data.error || "회원가입에 실패했습니다.");
+      }
+      alert(data.message || "회원가입이 완료되었습니다.");
+      navigate("/login-page");
+    } catch (err) {
+      alert("에러감지")
+      setErrors((prev) => ({ ...prev, server: err.message }));
     }
-
-    // 새 회원 추가
-    const updatedUsers = [...existingUsers, newUser];
-    localStorage.setItem("users", JSON.stringify(updatedUsers));
-
-    alert("회원가입이 완료되었습니다.");
-    navigate("/login-page");
   };
 
   return (
@@ -67,20 +88,21 @@ const SignupPage = () => {
       <h2 className={styles.signupTitle}>회원가입</h2>
       <form onSubmit={handleSubmit} className={styles.signupForm}>
         <div className={styles.formGroup}>
-          <label htmlFor="loginId" className={styles.label}>
+          <label htmlFor="username" className={styles.label}>
             아이디
           </label>
           <input
             type="text"
-            id="loginId"
-            name="loginId"
-            value={formData.loginId}
+            id="username"
+            name="username"
+            value={formData.username}
             onChange={handleChange}
             className={styles.input}
             placeholder="아이디를 입력하세요"
             required
           />
         </div>
+
         <div className={styles.formGroup}>
           <label htmlFor="email" className={styles.label}>
             이메일
@@ -96,6 +118,23 @@ const SignupPage = () => {
             required
           />
         </div>
+
+        <div className={styles.formGroup}>
+          <label htmlFor="nickname" className={styles.label}>
+            닉네임
+          </label>
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            value={formData.nickname}
+            onChange={handleChange}
+            className={styles.input}
+            placeholder="닉네임을 입력하세요"
+            required
+          />
+        </div>
+
         <div className={styles.formGroup}>
           <label htmlFor="password" className={styles.label}>
             비밀번호
@@ -111,6 +150,7 @@ const SignupPage = () => {
             required
           />
         </div>
+
         <div className={styles.formGroup}>
           <label htmlFor="confirmPassword" className={styles.label}>
             비밀번호 확인
@@ -126,10 +166,12 @@ const SignupPage = () => {
             required
           />
         </div>
-        {usernameError && (
-          <p className={styles.errorMessage}>{usernameError}</p>
-        )}
-        {emailError && <p className={styles.errorMessage}>{emailError}</p>}
+
+        {/* 에러 메시지 출력 */}
+        {errors.username && <p className={styles.errorMessage}>{errors.username}</p>}
+        {errors.email && <p className={styles.errorMessage}>{errors.email}</p>}
+        {errors.server && <p className={styles.errorMessage}>{errors.server}</p>}
+
         <button type="submit" className={styles.signupButton}>
           회원가입
         </button>

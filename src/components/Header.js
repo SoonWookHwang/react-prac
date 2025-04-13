@@ -4,12 +4,10 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
 const Header = ({ isLogin, setIsLogin, loginUser }) => {
-  console.log("loginUser", loginUser);
   const navigate = useNavigate();
   const [isSignUpPage, setIsSignUpPage] = useState(false);
   useEffect(() => {
     const current_page = window.location.href;
-    console.log(current_page);
     current_page.includes("/signup") ? setIsSignUpPage(true) : setIsSignUpPage(false);
   });
   const handleLogout = () => {
